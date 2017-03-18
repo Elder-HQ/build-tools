@@ -4,12 +4,26 @@ buildscript {
     }
 
     dependencies {
+        classpath 'com.bmuschko:gradle-docker-plugin:2.6.8'
+        classpath "commons-codec:commons-codec:1.8"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
     }
 }
 
+plugins {
+    id "org.sonarqube" version "2.1"
+}
+
 apply plugin: 'java'
 apply plugin: 'kotlin'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'idea'
+apply plugin: 'checkstyle'
+apply plugin: "jacoco"
+apply plugin: 'application'
+apply plugin: 'distribution'
+apply plugin: 'com.bmuschko.docker-java-application'
 
 configurations.all {
     resolutionStrategy {
@@ -17,10 +31,16 @@ configurations.all {
 
         force "ch.qos.logback:logback-classic:$logbackVersion"
         force "ch.qos.logback:logback-core:$logbackVersion"
-        force "com.fasterxml:classmate:1.3.1"
         force "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
+        force "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
         force "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+        force "com.fasterxml.jackson.datatype:jackson-datatype-guava:$jacksonVersion"
+        force "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jacksonVersion"
+        force "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion"
+        force "com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion"
+        force "com.fasterxml:classmate:1.3.1"
         force "com.google.api.grpc:grpc-google-common-protos:0.1.3"
+        force "com.google.auth:google-auth-library-credentials:0.6.0"
         force "com.google.auth:google-auth-library-oauth2-http:0.6.0"
         force "com.google.auto.value:auto-value:1.2"
         force "com.google.code.findbugs:jsr305:3.0.0"
@@ -28,28 +48,57 @@ configurations.all {
         force "com.google.guava:guava:$guavaVersion"
         force "com.google.http-client:google-http-client-jackson2:1.21.0"
         force "com.google.http-client:google-http-client:1.21.0"
+        force "com.squareup.okhttp:okhttp:2.7.5"
+        force "com.google.protobuf:protobuf-java:$googleProtobufVersion"
+        force "commons-codec:commons-codec:1.8"
+        force "commons-collections:commons-collections:3.2.2"
+        force "commons-logging:commons-logging:1.2"
+        force "io.github.openfeign:feign-core:$feignVersion"
+        force "io.github.openfeign:feign-slf4j:$feignVersion"
+        force "io.netty:netty-buffer:$nettyVersion"
+        force "io.netty:netty-codec:$nettyVersion"
+        force "io.netty:netty-handler:$nettyVersion"
+        force "io.netty:netty-transport:$nettyVersion"
+        force "io.prometheus:simpleclient_servlet:0.0.20"
         force "io.swagger:swagger-annotations:$swaggerVersion"
         force "joda-time:joda-time:2.9.2"
         force "junit:junit:4.12"
+        force "net.logstash.logback:logstash-logback-encoder:4.8"
         force "org.apache.commons:commons-lang3:$apacheCommonsLangVersion"
+        force "org.apache.httpcomponents:httpclient:$apacheHttpClientVersion"
+        force "org.elder.sourcerer:sourcerer-core:$sourcererVersion"
+        force "org.elder.sourcerer:sourcerer-esjc-spring:$sourcererVersion"
+        force "org.elder.sourcerer:sourcerer-esjc:$sourcererVersion"
         force "org.hamcrest:hamcrest-core:1.3"
-        force "org.jboss.logging:jboss-logging:3.3.0.Final"
-        force "org.jetbrains:annotations:$jetbrainsAnnotationsVersion"
-        force "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion"
-        force "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
-        force "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        force "org.hibernate:hibernate-validator:$hibernateValidatorVersion"
+        force "org.javassist:javassist:3.20.0-GA"
+        force "org.jboss.logging:jboss-logging:3.2.1.Final"
         force "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+        force "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
+        force "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion"
+        force "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        force "org.jetbrains:annotations:$jetbrainsAnnotationsVersion"
         force "org.json:json:20151123"
         force "org.slf4j:jcl-over-slf4j:1.7.22"
         force "org.slf4j:slf4j-api:1.7.22"
+        force "org.springframework.boot:spring-boot-actuator:$springBootVersion"
         force "org.springframework.boot:spring-boot-autoconfigure:$springBootVersion"
         force "org.springframework.boot:spring-boot:$springBootVersion"
+        force "org.springframework.cloud:spring-cloud-commons:$springCloudVersion"
+        force "org.springframework.cloud:spring-cloud-context:$springCloudVersion"
+        force "org.springframework.cloud:spring-cloud-netflix-core:$springCloudNetflixVersion"
+        force "org.springframework.data:spring-data-commons:$springDataVersion"
+        force "org.springframework.data:spring-data-jpa:$springDataJpaVersion"
+        force "org.springframework.security:spring-security-config:$springSecurityVersion"
+        force "org.springframework.security:spring-security-core:$springSecurityVersion"
+        force "org.springframework.security:spring-security-web:$springSecurityVersion"
         force "org.springframework:spring-aop:$springVersion"
         force "org.springframework:spring-beans:$springVersion"
         force "org.springframework:spring-context:$springVersion"
         force "org.springframework:spring-core:$springVersion"
         force "org.springframework:spring-expression:$springVersion"
         force "org.springframework:spring-web:$springVersion"
+        force "org.springframework:spring-webmvc:$springVersion"
     }
 }
 
@@ -58,24 +107,122 @@ repositories {
 }
 
 dependencies {
-    // Kotlin dependencies
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion"
-
-    // APIs and infrastructure
-    compile "javax.inject:javax.inject:$javaxInjectVersion"
-    compile "javax.validation:validation-api:$javaxValidationApiVersion"
-    compile "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:$hibernateJpaApiVersion"
-    compile "org.jboss.spec.javax.servlet:jboss-servlet-api_3.1_spec:$servletApiVersion"
-    compile "org.slf4j:slf4j-api:$slf4jVersion"
-
-    // Collections and common utils
+    compile "ch.qos.logback:logback-classic:$logbackVersion"
+    compile "ch.qos.logback:logback-core:$logbackVersion"
+    compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-guava:$jacksonVersion"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-guava:$jacksonVersion"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jacksonVersion"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jacksonVersion"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion"
+    compile "com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion"
+    compile "com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion"
+    compile "com.fasterxml:classmate:1.3.1"
+    compile "com.github.rholder:guava-retrying:2.0.0"
+    compile "com.gocardless:gocardless-pro:1.20.0"
+    compile "com.google.api.grpc:grpc-google-common-protos:0.1.3"
+    compile "com.google.auth:google-auth-library-oauth2-http:0.6.0"
+    compile "com.google.auto.value:auto-value:1.2"
+    compile "com.google.code.findbugs:jsr305:3.0.0"
+    compile "com.google.code.gson:gson:2.3.1"
     compile "com.google.guava:guava:$guavaVersion"
+    compile "com.google.http-client:google-http-client-jackson2:1.21.0"
+    compile "com.google.http-client:google-http-client:1.21.0"
+    compile "com.puppycrawl.tools:checkstyle:7.1.1"
+    compile "com.querydsl:querydsl-apt:$queryDslVersion:jpa"
+    compile "com.querydsl:querydsl-jpa:$queryDslVersion"
+    compile "com.shazam:shazamcrest:$shazamcrestVersion"
+    compile "com.squareup.okhttp:okhttp:2.7.5"
+    compile "com.stripe:stripe-java:1.42.0"
+    compile "commons-codec:commons-codec:1.8"
+    compile "commons-collections:commons-collections:3.2.2"
+    compile "commons-logging:commons-logging:1.2"
+    compile "io.github.openfeign:feign-core:$feignVersion"
+    compile "io.github.openfeign:feign-core:$feignVersion"
+    compile "io.github.openfeign:feign-httpclient:$feignVersion"
+    compile "io.github.openfeign:feign-jackson:$feignVersion"
+    compile "io.github.openfeign:feign-slf4j:$feignVersion"
+    compile "io.github.openfeign:feign-slf4j:$feignVersion"
+    compile "io.prometheus:simpleclient_servlet:0.0.20"
+    compile "io.springfox:springfox-bean-validators:$springfoxVersion"
+    compile "io.springfox:springfox-schema:$springfoxVersion"
+    compile "io.springfox:springfox-spring-web:$springfoxVersion"
+    compile "io.springfox:springfox-swagger-ui:$springfoxVersion"
+    compile "io.springfox:springfox-swagger2:$springfoxVersion"
+    compile "io.swagger:swagger-annotations:$swaggerVersion"
+    compile "io.swagger:swagger-annotations:$swaggerVersion"
+    compile "io.undertow:undertow-servlet:$undertowVersion"
+    compile "javax.el:javax.el-api:2.2.5"
+    compile "joda-time:joda-time:2.9.2"
+    compile "junit:junit:$junitVersion"
+    compile "junit:junit:4.12"
+    compile "mysql:mysql-connector-java:6.0.3"
+    compile "net.logstash.logback:logstash-logback-encoder:4.8"
     compile "org.apache.commons:commons-lang3:$apacheCommonsLangVersion"
+    compile "org.apache.httpcomponents:httpclient:$apacheHttpClientVersion"
+    compile "org.apache.tomcat:tomcat-jdbc:8.0.33"
+    compile "org.aspectj:aspectjweaver:1.8.10"
+    compile "org.elder.sourcerer:sourcerer-core:$sourcererVersion"
+    compile "org.elder.sourcerer:sourcerer-esjc-spring:$sourcererVersion"
+    compile "org.elder.sourcerer:sourcerer-esjc:$sourcererVersion"
+    compile "org.hamcrest:hamcrest-all:$hamcrestVersion"
+    compile "org.hamcrest:hamcrest-core:1.3"
+    compile "org.hibernate:hibernate-entitymanager:5.1.4.Final"
+    compile "org.hibernate:hibernate-validator:$hibernateValidatorVersion"
+    compile "org.javassist:javassist:3.20.0-GA"
+    compile "org.jboss.logging:jboss-logging:3.2.1.Final"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    compile "org.jetbrains:annotations:$jetbrainsAnnotationsVersion"
+    compile "org.json:json:20151123"
+    compile "org.mockito:mockito-core:$mockitoVersion"
+    compile "org.powermock:powermock-mockito-release-full:$powermockVersion"
+    compile "org.slf4j:jcl-over-slf4j:1.7.22"
+    compile "org.slf4j:slf4j-api:1.7.22"
+    compile "org.springframework.boot:spring-boot-actuator:$springBootVersion"
+    compile "org.springframework.boot:spring-boot-autoconfigure:$springBootVersion"
+    compile "org.springframework.boot:spring-boot-test:1.4.1.RELEASE"
+    compile "org.springframework.boot:spring-boot:$springBootVersion"
+    compile "org.springframework.cloud:spring-cloud-commons:$springCloudVersion"
+    compile "org.springframework.cloud:spring-cloud-commons:$springCloudVersion"
+    compile "org.springframework.cloud:spring-cloud-context:$springCloudVersion"
+    compile "org.springframework.cloud:spring-cloud-context:$springCloudVersion"
+    compile "org.springframework.cloud:spring-cloud-netflix-core:$springCloudNetflixVersion"
+    compile "org.springframework.cloud:spring-cloud-netflix-core:$springCloudNetflixVersion"
+    compile "org.springframework.data:spring-data-commons:$springDataVersion"
+    compile "org.springframework.data:spring-data-jpa:$springDataJpaVersion"
+    compile "org.springframework.security:spring-security-config:$springSecurityVersion"
+    compile "org.springframework.security:spring-security-core:$springSecurityVersion"
+    compile "org.springframework.security:spring-security-web:$springSecurityVersion"
+    compile "org.springframework:spring-aop:$springVersion"
+    compile "org.springframework:spring-beans:$springVersion"
+    compile "org.springframework:spring-context:$springVersion"
+    compile "org.springframework:spring-core:$springVersion"
+    compile "org.springframework:spring-expression:$springVersion"
+    compile "org.springframework:spring-web:$springVersion"
+    compile "org.springframework:spring-webmvc:$springVersion"
+    compile 'ch.qos.logback:logback-classic:1.2.1'
+    compile 'net.logstash.logback:logstash-logback-encoder:4.8'
+    compile 'org.codehaus.janino:janino:2.7.8'
+    compile 'org.slf4j:jcl-over-slf4j:1.7.22'
+    compile 'org.tuxdude.logback.extensions:logback-colorizer:1.0.1'
+    compile 'org.yaml:snakeyaml:1.17'
+}
 
-    // Test frameworks
-    testCompile "junit:junit:$junitVersion"
-    testCompile "org.hamcrest:hamcrest-all:$hamcrestVersion"
-    testCompile "org.mockito:mockito-core:$mockitoVersion"
-    testCompile "org.powermock:powermock-mockito-release-full:$powermockVersion"
-    testCompile "com.shazam:shazamcrest:$shazamcrestVersion"
+task downloadDependencies() {
+    doLast {
+        configurations.each {
+            def config = it
+            copy {
+                from config
+                into 'build/alldependencies'
+                duplicatesStrategy 'exclude'
+            }
+        }
+    }
 }
