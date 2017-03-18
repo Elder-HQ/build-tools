@@ -5,7 +5,7 @@ FROM ubuntu:16.04
 ###################################################################
 RUN \
   apt-get update && \
-  apt-get install -y software-properties-common python-software-properties git && \
+  apt-get install -y software-properties-common python-software-properties git docker.io && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
   
@@ -29,7 +29,7 @@ ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 RUN \
   cd $HOME && \
   wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-147.0.0-linux-x86_64.tar.gz && \
-  tar xvf google-cloud-sdk-147.0.0-linux-x86_64.tar.gz && \
+  tar xf google-cloud-sdk-147.0.0-linux-x86_64.tar.gz && \
   rm google-cloud-sdk-147.0.0-linux-x86_64.tar.gz && \
   ./google-cloud-sdk/install.sh && \
   ./google-cloud-sdk/bin/gcloud components install kubectl
