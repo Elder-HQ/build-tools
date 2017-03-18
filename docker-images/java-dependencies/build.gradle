@@ -1,0 +1,81 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+configurations.all {
+    resolutionStrategy {
+        failOnVersionConflict()
+
+        force "ch.qos.logback:logback-classic:$logbackVersion"
+        force "ch.qos.logback:logback-core:$logbackVersion"
+        force "com.fasterxml:classmate:1.3.1"
+        force "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
+        force "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+        force "com.google.api.grpc:grpc-google-common-protos:0.1.3"
+        force "com.google.auth:google-auth-library-oauth2-http:0.6.0"
+        force "com.google.auto.value:auto-value:1.2"
+        force "com.google.code.findbugs:jsr305:3.0.0"
+        force "com.google.code.gson:gson:2.3.1"
+        force "com.google.guava:guava:$guavaVersion"
+        force "com.google.http-client:google-http-client-jackson2:1.21.0"
+        force "com.google.http-client:google-http-client:1.21.0"
+        force "io.swagger:swagger-annotations:$swaggerVersion"
+        force "joda-time:joda-time:2.9.2"
+        force "junit:junit:4.12"
+        force "org.apache.commons:commons-lang3:$apacheCommonsLangVersion"
+        force "org.hamcrest:hamcrest-core:1.3"
+        force "org.jboss.logging:jboss-logging:3.3.0.Final"
+        force "org.jetbrains:annotations:$jetbrainsAnnotationsVersion"
+        force "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion"
+        force "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
+        force "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        force "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+        force "org.json:json:20151123"
+        force "org.slf4j:jcl-over-slf4j:1.7.22"
+        force "org.slf4j:slf4j-api:1.7.22"
+        force "org.springframework.boot:spring-boot-autoconfigure:$springBootVersion"
+        force "org.springframework.boot:spring-boot:$springBootVersion"
+        force "org.springframework:spring-aop:$springVersion"
+        force "org.springframework:spring-beans:$springVersion"
+        force "org.springframework:spring-context:$springVersion"
+        force "org.springframework:spring-core:$springVersion"
+        force "org.springframework:spring-expression:$springVersion"
+        force "org.springframework:spring-web:$springVersion"
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Kotlin dependencies
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion"
+
+    // APIs and infrastructure
+    compile "javax.inject:javax.inject:$javaxInjectVersion"
+    compile "javax.validation:validation-api:$javaxValidationApiVersion"
+    compile "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:$hibernateJpaApiVersion"
+    compile "org.jboss.spec.javax.servlet:jboss-servlet-api_3.1_spec:$servletApiVersion"
+    compile "org.slf4j:slf4j-api:$slf4jVersion"
+
+    // Collections and common utils
+    compile "com.google.guava:guava:$guavaVersion"
+    compile "org.apache.commons:commons-lang3:$apacheCommonsLangVersion"
+
+    // Test frameworks
+    testCompile "junit:junit:$junitVersion"
+    testCompile "org.hamcrest:hamcrest-all:$hamcrestVersion"
+    testCompile "org.mockito:mockito-core:$mockitoVersion"
+    testCompile "org.powermock:powermock-mockito-release-full:$powermockVersion"
+    testCompile "com.shazam:shazamcrest:$shazamcrestVersion"
+}
