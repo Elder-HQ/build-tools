@@ -5,7 +5,12 @@ FROM ubuntu:16.04
 ###################################################################
 RUN \
   apt-get update && \
-  apt-get install -y software-properties-common python-software-properties git docker.io && \
+  apt-get install -y git curl && \
+  (curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash) && \
+  apt-get install -y software-properties-common python-software-properties docker.io git-lfs && \
+  apt-get remove -y --purge curl && \
+  git lfs install && \
+  apt-get autoremove && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
   
