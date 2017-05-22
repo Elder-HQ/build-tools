@@ -1,0 +1,15 @@
+source "https://rubygems.org"
+
+gem 'jekyll-assets'
+gem 'jekyll-sitemap'
+gem 'rake'
+gem 'html-proofer'
+gem 'sass'
+gem 'autoprefixer-rails'
+gem 'therubyracer'
+gem 'uglifier'
+
+group :jekyll_plugins do
+  gem 'jekyll-contentful-data-import'
+  gem 'html_compressor'
+end
