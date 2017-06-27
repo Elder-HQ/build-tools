@@ -62,6 +62,14 @@ RUN \
   rm -rf build-tools
 
 ###################################################################
+# Set the locale to en_GB.UTF-8                                   #
+###################################################################
+RUN locale-gen en_GB.UTF-8
+ENV LANG en_GB.UTF-8
+ENV LANGUAGE en_GB:en
+ENV LC_ALL en_GB.UTF-8
+
+###################################################################
 #          Set some sane defaults for users of the image          #
 ###################################################################
 WORKDIR /root
