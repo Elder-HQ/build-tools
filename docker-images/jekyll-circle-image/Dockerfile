@@ -34,11 +34,36 @@ RUN \
 ###################################################################
 #              Download Netlify command line client               #
 ###################################################################
-
 RUN \
   wget https://github.com/netlify/netlifyctl/releases/download/v0.1.3/netlifyctl-linux-amd64.tar.gz && \
   tar -xzvf netlifyctl-linux-amd64.tar.gz && \
   rm netlifyctl-linux-amd64.tar.gz
+
+###################################################################
+#              Download Wraith and dependencies                   #
+###################################################################
+
+# Install all apt and node dependencies required, including fonts
+RUN \
+  echo "export phantomjs=/usr/bin/phantomjs" > .bashrc && \
+  echo "deb http://ftp.us.debian.org/debian jessie main contrib non-free" | tee -a /etc/apt/sources.list && \
+  echo "deb http://security.debian.org/ jessie/updates contrib non-free" | tee -a /etc/apt/sources.list && \
+  apt-get update && \
+  apt-get install -y libfreetype6 libfontconfig1 nodejs npm && \
+  apt-get install -y ttf-freefont ttf-mscorefonts-installer ttf-bitstream-vera ttf-dejavu ttf-liberation && \
+  apt-get install -y imagemagick && \
+  ln -s /usr/bin/nodejs /usr/bin/node && \
+  npm install npm && \
+  npm install -g phantomjs@2.1.7
+
+# Install our home grown version of wrath
+RUN \
+  git clone https://github.com/Elder-HQ/wraith.git && \
+  cd wraith && \
+  gem build wraith.gemspec && \
+  gem install wraith && \
+  cd $HOME && \
+  rm -rf wraith
 
 ###################################################################
 #          Set some sane defaults for users of the image          #
