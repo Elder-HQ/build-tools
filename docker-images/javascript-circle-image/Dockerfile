@@ -20,6 +20,20 @@ RUN \
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 
 ###################################################################
+#                      Install Git LFS & jq                       #
+###################################################################
+RUN \
+  apt-get update && \
+  apt-get install -y curl && \
+  (curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash) && \
+  apt-get install -y git-lfs jq && \
+  git lfs install && \
+  apt-get remove -y --purge curl && \
+  apt-get autoremove && \
+  apt-get clean && \
+  rm -rf /var/lib/apt/lists/*
+
+###################################################################
 #              Download Netlify command line client               #
 ###################################################################
 
