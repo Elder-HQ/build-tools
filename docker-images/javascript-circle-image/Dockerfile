@@ -1,4 +1,4 @@
-FROM node:6.10.3
+FROM node:8.9.4
 
 ENV LANG C.UTF-8
 
@@ -29,12 +29,9 @@ RUN \
   rm netlifyctl-linux-amd64.tar.gz
 
 ###################################################################
-#                    Install yarn and gulp                        #
+#                          Install gulp                           #
 ###################################################################
-RUN \
-  echo "Installing Yarn and Gulp" && \
-  npm install -g yarn@0.24.6 && \
-  npm install -g gulp-cli@1.3.0
+RUN yarn global add gulp-cli@1.3.0
 
 ###################################################################
 #                   Install common dependencies                   #
