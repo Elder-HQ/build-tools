@@ -24,20 +24,23 @@ ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 ###################################################################
 
 RUN \
-  wget https://github.com/netlify/netlifyctl/releases/download/v0.1.3/netlifyctl-linux-amd64.tar.gz && \
-  tar -xzvf netlifyctl-linux-amd64.tar.gz && \
-  rm netlifyctl-linux-amd64.tar.gz
+  wget https://github.com/netlify/netlifyctl/releases/download/v0.2.2/netlifyctl-linux-amd64-0.2.2.tar.gz && \
+  tar -xzvf netlifyctl-linux-amd64-0.2.2.tar.gz && \
+  rm netlifyctl-linux-amd64-0.2.2.tar.gz
 
 ###################################################################
-#                          Install gulp                           #
+#                   Install global build tools                    #
 ###################################################################
-RUN yarn global add gulp-cli@1.3.0
+RUN \
+  echo "Installing Global Build Tools" && \
+  npm install -g flow-bin@v0.63.1 && \
+  npm install -g gulp-cli@2.0.0
 
 ###################################################################
 #                   Install common dependencies                   #
 ###################################################################
 RUN \
-  echo "Getting dependencies as of 20170608" && \
+  echo "Getting dependencies as of 20180122" && \
   cd $HOME && \
   git clone https://github.com/Elder-HQ/build-tools.git && \
   cd build-tools/javascript-dependencies && \
