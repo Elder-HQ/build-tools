@@ -1,4 +1,4 @@
-FROM node:8.9.0
+FROM node:8.9.4
 
 ENV LANG C.UTF-8
 
@@ -33,9 +33,7 @@ RUN \
 ###################################################################
 RUN \
   echo "Installing Global Build Tools" && \
-  npm install -g yarn@1.4.0 && \
-  npm install -g flow-bin@v0.63.1 && \
-  npm install -g gulp-cli@2.0.0
+  yarn global add flow-bin@v0.63.1 gulp-cli@2.0.0
 
 ###################################################################
 #                   Install common dependencies                   #
