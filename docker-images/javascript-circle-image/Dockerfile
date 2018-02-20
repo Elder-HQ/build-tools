@@ -33,8 +33,7 @@ RUN \
 ###################################################################
 RUN \
   echo "Installing Global Build Tools" && \
-  npm install -g flow-bin@v0.63.1 && \
-  npm install -g gulp-cli@2.0.0
+  yarn global add flow-bin@v0.63.1 gulp-cli@2.0.0
 
 ###################################################################
 #                   Install common dependencies                   #
