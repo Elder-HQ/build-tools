@@ -1,4 +1,4 @@
-FROM node:8.9.0
+FROM node:8.10.0
 
 ENV LANG C.UTF-8
 
@@ -24,24 +24,36 @@ ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 ###################################################################
 
 RUN \
-  wget https://github.com/netlify/netlifyctl/releases/download/v0.2.2/netlifyctl-linux-amd64-0.2.2.tar.gz && \
-  tar -xzvf netlifyctl-linux-amd64-0.2.2.tar.gz && \
-  rm netlifyctl-linux-amd64-0.2.2.tar.gz
+  cd /root && \
+  mkdir opt && \
+  cd opt && \
+  wget https://github.com/netlify/netlifyctl/releases/download/v0.3.2/netlifyctl-linux-amd64-0.3.2.tar.gz && \
+  tar -xzvf netlifyctl-linux-amd64-0.3.2.tar.gz && \
+  rm netlifyctl-linux-amd64-0.3.2.tar.gz
+
+ENV PATH /root/opt:$PATH
 
 ###################################################################
 #                   Install global build tools                    #
 ###################################################################
 RUN \
   echo "Installing Global Build Tools" && \
-  npm install -g yarn@1.4.0 && \
-  npm install -g flow-bin@v0.63.1 && \
   npm install -g gulp-cli@2.0.0
+
+# Make sure to use our own version of yarn so that we can control the version independently
+RUN \
+  rm -f /usr/local/bin/yarnpkg && \
+  rm -f /usr/local/bin/yarn && \
+  rm -rf ${HOME}/.yarn && \
+  curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.5.1
+
+ENV PATH /root/.yarn/bin:$PATH
 
 ###################################################################
 #                   Install common dependencies                   #
 ###################################################################
 RUN \
-  echo "Getting dependencies as of 20180122" && \
+  echo "Getting dependencies as of 20180316" && \
   cd $HOME && \
   git clone https://github.com/Elder-HQ/build-tools.git && \
   cd build-tools/javascript-dependencies && \
