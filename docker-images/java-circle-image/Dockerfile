@@ -42,9 +42,9 @@ ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 ###################################################################
 RUN \
   cd $HOME && \
-  wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-147.0.0-linux-x86_64.tar.gz && \
-  tar xf google-cloud-sdk-147.0.0-linux-x86_64.tar.gz && \
-  rm google-cloud-sdk-147.0.0-linux-x86_64.tar.gz && \
+  wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-201.0.0-linux-x86_64.tar.gz && \
+  tar xf google-cloud-sdk-201.0.0-linux-x86_64.tar.gz && \
+  rm google-cloud-sdk-201.0.0-linux-x86_64.tar.gz && \
   ./google-cloud-sdk/install.sh && \
   ./google-cloud-sdk/bin/gcloud components install kubectl
 
@@ -52,7 +52,7 @@ RUN \
 # Force downloading Gradle binaries and common Elder dependencies #
 ###################################################################
 RUN \
-  echo "Getting dependencies as of 20170318" && \
+  echo "Getting dependencies as of 2018-05-16" && \
   cd $HOME && \
   mkdir .gradle && echo "org.gradle.daemon=false" > .gradle/gradle.properties && \
   git clone https://github.com/Elder-HQ/build-tools.git && \
