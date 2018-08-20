@@ -8,8 +8,9 @@ gem 'sass'
 gem 'autoprefixer-rails'
 gem 'therubyracer'
 gem 'uglifier'
+gem 'jekyll-include-cache'
 
 group :jekyll_plugins do
-  gem 'jekyll-contentful-data-import'
-  gem 'html_compressor'
+  gem 'jekyll-contentful-data-import','1.4.3'
+  gem 'hawkins'
 end

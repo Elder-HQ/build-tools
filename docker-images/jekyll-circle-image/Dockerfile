@@ -1,4 +1,4 @@
-FROM circleci/node:8.9.4-stretch 
+FROM cypress/browsers:chrome67
 
 ENV LANG C.UTF-8
 
@@ -6,14 +6,14 @@ ENV LANG C.UTF-8
 #                Updating base system and Ruby                    #
 ###################################################################
 RUN \
-  sudo apt-get update -y && \
-  sudo apt-get update && sudo apt-get install -y --no-install-recommends --no-install-suggests curl bzip2 build-essential libssl-dev libreadline-dev zlib1g-dev && \
-  sudo rm -rf /var/lib/apt/lists/* && \
+  apt-get update -y && \
+  apt-get update && apt-get install -y --no-install-recommends --no-install-suggests curl bzip2 build-essential libssl-dev libreadline-dev zlib1g-dev && \
+  rm -rf /var/lib/apt/lists/* && \
   curl -L https://github.com/sstephenson/ruby-build/archive/v20180329.tar.gz | tar -zxvf - -C /tmp/ && \
-  cd /tmp/ruby-build-* && sudo ./install.sh && cd / && \
-  sudo ruby-build -v 2.5.1 /usr/local && sudo rm -rfv /tmp/ruby-build-* && \
-  sudo gem install bundler --no-rdoc --no-ri && \
-  sudo apt-get clean
+  cd /tmp/ruby-build-* && ./install.sh && cd / && \
+  ruby-build -v 2.5.1 /usr/local && rm -rfv /tmp/ruby-build-* && \
+  gem install bundler --no-rdoc --no-ri && \
+  apt-get clean
 
 ###################################################################
 #              Download Netlify command line client               #
@@ -26,21 +26,21 @@ RUN \
 
 RUN \
   cd && \
-  wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add - && \
-  echo "deb http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list && \
-  sudo apt-get update && \
-  sudo apt-get -y install google-chrome-stable && \
+  wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+  echo "deb http://dl.google.com/linux/chrome/deb/ stable main" | tee /etc/apt/sources.list.d/google-chrome.list && \
+  apt-get update && \
+  apt-get -y install google-chrome-stable && \
   google-chrome --version
 
 RUN \
-  sudo sed -i 's|HERE/chrome"|HERE/chrome" --disable-setuid-sandbox --no-sandbox|g' "/usr/bin/google-chrome"
+  sed -i 's|HERE/chrome"|HERE/chrome" --disable-setuid-sandbox --no-sandbox|g' "/usr/bin/google-chrome"
 
 ###################################################################
 #              Download Wraith and dependencies                   #
 ###################################################################
 
 # Install wraith
-RUN sudo gem install wraith
+RUN gem install wraith
 
 ###################################################################
 #                  Force downloading Ruby gems                    #
