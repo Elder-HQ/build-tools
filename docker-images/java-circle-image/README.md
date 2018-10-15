@@ -1,5 +1,7 @@
+## First time login
+    docker login
+Ask a fellow developer for the credentials
 ## To build an image
-
     docker build . -t elderhq/java-circle-image:20170318-1
     docker push elderhq/java-circle-image:20170318-1
 

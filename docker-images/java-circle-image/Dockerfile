@@ -52,7 +52,7 @@ RUN \
 # Force downloading Gradle binaries and common Elder dependencies #
 ###################################################################
 RUN \
-  echo "Getting dependencies as of 2018-05-16" && \
+  echo "Getting dependencies as of 2018-10-12" && \
   cd $HOME && \
   mkdir .gradle && echo "org.gradle.daemon=false" > .gradle/gradle.properties && \
   git clone https://github.com/Elder-HQ/build-tools.git && \
