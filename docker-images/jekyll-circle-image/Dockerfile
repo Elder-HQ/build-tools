@@ -36,11 +36,14 @@ RUN \
   sed -i 's|HERE/chrome"|HERE/chrome" --disable-setuid-sandbox --no-sandbox|g' "/usr/bin/google-chrome"
 
 ###################################################################
-#              Download Wraith and dependencies                   #
+#                         Install Docker                          #
 ###################################################################
 
-# Install wraith
-RUN gem install wraith
+RUN \
+  echo "deb https://apt.dockerproject.org/repo debian-jessie main" > /etc/apt/sources.list.d/docker.list && \
+  apt-get install apt-transport-https && \
+  apt-get update && \
+  apt-get -y --force-yes install docker-engine
 
 ###################################################################
 #                  Force downloading Ruby gems                    #
