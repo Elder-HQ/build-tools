@@ -18,11 +18,11 @@ RUN \
 ###################################################################
 #              Download Netlify command line client               #
 ###################################################################
-RUN \
-  cd && \
-  wget https://github.com/netlify/netlifyctl/releases/download/v0.3.3/netlifyctl-linux-amd64-0.3.3.tar.gz && \
-  tar -xzvf netlifyctl-linux-amd64-0.3.3.tar.gz && \
-  rm netlifyctl-linux-amd64-0.3.3.tar.gz
+RUN npm install netlify-cli -g
+
+###################################################################
+#                         Install Chome                           #
+###################################################################
 
 RUN \
   cd && \
