@@ -1,7 +1,13 @@
 ## First time login
-    docker login
+```
+docker login
+```
 Ask a fellow developer for the credentials
-## To build an image
-    docker build . -t elderhq/jekyll-circle-image:{date}
-    docker push elderhq/jekyll-circle-image:{date}
-Replace `{date}` with format `YYYYMMDD-1`
+
+## Building/pushing images
+Use the `buildAndPush.sh` file to handle building/tagging/pushing
+
+## Debug locally
+```
+docker run -i -t --rm elderhq/jekyll-circle-image:{date} /bin/bash
+```
