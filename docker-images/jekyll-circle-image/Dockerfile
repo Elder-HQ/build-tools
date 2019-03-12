@@ -18,7 +18,7 @@ RUN \
 ###################################################################
 #              Download Netlify command line client               #
 ###################################################################
-RUN npm install netlify-cli -g
+RUN npm install netlify-cli@2.8.3 -g
 
 ###################################################################
 #                         Install Chome                           #
@@ -34,16 +34,6 @@ RUN \
 
 RUN \
   sed -i 's|HERE/chrome"|HERE/chrome" --disable-setuid-sandbox --no-sandbox|g' "/usr/bin/google-chrome"
-
-###################################################################
-#                         Install Docker                          #
-###################################################################
-
-RUN \
-  echo "deb https://apt.dockerproject.org/repo debian-jessie main" > /etc/apt/sources.list.d/docker.list && \
-  apt-get install apt-transport-https && \
-  apt-get update && \
-  apt-get -y --force-yes install docker-engine
 
 ###################################################################
 #                  Force downloading Ruby gems                    #
