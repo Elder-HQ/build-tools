@@ -10,39 +10,44 @@ RUN \
   rm -rf /var/lib/apt/lists/*
 
 ###################################################################
+#             Install useful tools like curl and jq               #
+###################################################################
+RUN \
+  apt-get update && \
+  apt-get install -y curl jq && \
+  apt-get clean && \
+  rm -rf /var/lib/apt/lists/*
+
+###################################################################
 #                        Install Git LFS                          #
 ###################################################################
 RUN \
   apt-get update && \
-  apt-get install -y curl && \
   (curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash) && \
   apt-get install -y git-lfs && \
   git lfs install && \
-  apt-get remove -y --purge curl && \
   apt-get autoremove && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
+
 
 ###################################################################
 #                 Install Oracle JDK for Java 8                   #
 ###################################################################
 RUN \
-  add-apt-repository -y ppa:webupd8team/java && \
+  add-apt-repository -y ppa:openjdk-r/ppa && \
   apt-get update && \
-  echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections  && \
-  echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections  && \
-  DEBIAN_FRONTEND=noninteractive apt-get install -y oracle-java8-installer oracle-java8-unlimited-jce-policy && \
-  rm -rf /var/cache/oracle-jdk8-installer && \
+  DEBIAN_FRONTEND=noninteractive apt-get install -y openjdk-8-jdk && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
-ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 
 ###################################################################
 #           Install GCloud SDK and Kubernetes client              #
 ###################################################################
 RUN \
   cd $HOME && \
-  wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-201.0.0-linux-x86_64.tar.gz && \
+  curl -Ogoogle-cloud-sdk-201.0.0-linux-x86_64.tar.gz  https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-201.0.0-linux-x86_64.tar.gz && \
   tar xf google-cloud-sdk-201.0.0-linux-x86_64.tar.gz && \
   rm google-cloud-sdk-201.0.0-linux-x86_64.tar.gz && \
   ./google-cloud-sdk/install.sh && \
@@ -64,7 +69,12 @@ RUN \
 ###################################################################
 # Set the locale to en_GB.UTF-8                                   #
 ###################################################################
-RUN locale-gen en_GB.UTF-8
+RUN apt-get update && \
+  apt-get install -y locales && \
+  locale-gen en_GB.UTF-8 && \
+  apt-get clean && \
+  rm -rf /var/lib/apt/lists/*
+
 ENV LANG en_GB.UTF-8
 ENV LANGUAGE en_GB:en
 ENV LC_ALL en_GB.UTF-8
