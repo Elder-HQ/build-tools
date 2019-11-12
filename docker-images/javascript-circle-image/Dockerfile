@@ -74,24 +74,6 @@ RUN \
 ENV PATH /root/.yarn/bin:$PATH
 
 ###################################################################
-#                   Install common dependencies                   #
-###################################################################
-RUN \
-  echo "Getting dependencies as of 20191111" && \
-  apt-get update && \
-  apt-get install -y build-essential && \
-  cd $HOME && \
-  git clone https://github.com/Elder-HQ/build-tools.git && \
-  cd build-tools/javascript-dependencies && \
-  yarn install --pure-lockfile && \
-  cd $HOME && \
-  rm -rf build-tools && \
-  apt-get remove -y --purge build-essential && \
-  apt-get autoremove -y && \
-  apt-get clean && \
-  rm -rf /var/lib/apt/lists/*
-
-###################################################################
 #          Set some sane defaults for users of the image          #
 ###################################################################
 WORKDIR /root
