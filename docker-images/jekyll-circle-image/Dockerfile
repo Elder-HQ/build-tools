@@ -1,5 +1,4 @@
-FROM cypress/browsers:chrome67
-
+FROM cypress/browsers:node8.15.1-chrome73
 ENV LANG C.UTF-8
 
 ###################################################################
