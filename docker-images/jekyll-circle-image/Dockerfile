@@ -11,7 +11,7 @@ RUN \
   curl -L https://github.com/sstephenson/ruby-build/archive/v20180329.tar.gz | tar -zxvf - -C /tmp/ && \
   cd /tmp/ruby-build-* && ./install.sh && cd / && \
   ruby-build -v 2.5.1 /usr/local && rm -rfv /tmp/ruby-build-* && \
-  gem install bundler --no-rdoc --no-ri && \
+  gem install bundler --no-rdoc --no-ri -v 1.16.2 && \
   apt-get clean
 
 ###################################################################
