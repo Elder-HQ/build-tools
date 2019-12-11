@@ -1,5 +1,4 @@
-FROM cypress/browsers:chrome67
-
+FROM cypress/browsers:node8.15.1-chrome73
 ENV LANG C.UTF-8
 
 ###################################################################
@@ -12,17 +11,13 @@ RUN \
   curl -L https://github.com/sstephenson/ruby-build/archive/v20180329.tar.gz | tar -zxvf - -C /tmp/ && \
   cd /tmp/ruby-build-* && ./install.sh && cd / && \
   ruby-build -v 2.5.1 /usr/local && rm -rfv /tmp/ruby-build-* && \
-  gem install bundler --no-rdoc --no-ri && \
+  gem install bundler --no-rdoc --no-ri -v 1.16.2 && \
   apt-get clean
 
 ###################################################################
-#              Download Netlify command line client               #
+#              Download Firebase command line client               #
 ###################################################################
-RUN \
-  cd usr/bin && \
-  wget https://github.com/netlify/netlifyctl/releases/download/v0.4.0/netlifyctl-linux-amd64-0.4.0.tar.gz && \
-  tar -xzvf netlifyctl-linux-amd64-0.4.0.tar.gz && \
-  rm netlifyctl-linux-amd64-0.4.0.tar.gz
+RUN npm install -g firebase-tools
 
 ###################################################################
 #                         Install Chome                           #
