@@ -45,11 +45,12 @@ ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 ###################################################################
 #           Install GCloud SDK and Kubernetes client              #
 ###################################################################
+# Find the latest version here: https://cloud.google.com/sdk/docs/downloads-versioned-archives
 RUN \
   cd $HOME && \
-  curl -Ogoogle-cloud-sdk-201.0.0-linux-x86_64.tar.gz  https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-201.0.0-linux-x86_64.tar.gz && \
-  tar xf google-cloud-sdk-201.0.0-linux-x86_64.tar.gz && \
-  rm google-cloud-sdk-201.0.0-linux-x86_64.tar.gz && \
+  curl -o google-cloud-sdk.tar.gz "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-274.0.0-linux-x86_64.tar.gz" && \
+  tar xf google-cloud-sdk.tar.gz && \
+  rm google-cloud-sdk.tar.gz && \
   ./google-cloud-sdk/install.sh && \
   ./google-cloud-sdk/bin/gcloud components install kubectl
 
@@ -57,7 +58,7 @@ RUN \
 # Force downloading Gradle binaries and common Elder dependencies #
 ###################################################################
 RUN \
-  echo "Getting dependencies as of 2018-10-12" && \
+  echo "Getting dependencies as of 2019-12-18" && \
   cd $HOME && \
   mkdir .gradle && echo "org.gradle.daemon=false" > .gradle/gradle.properties && \
   git clone https://github.com/Elder-HQ/build-tools.git && \
