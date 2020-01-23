@@ -1,12 +1,6 @@
 buildscript {
     repositories {
-        maven {
-            credentials {
-                username "$elderNexusUsername"
-                password "$elderNexusPassword"
-            }
-            url 'https://nexus.elder.org/content/repositories/central'
-        }
+        mavenCentral()
     }
 
     dependencies {
@@ -184,3 +178,5 @@ task downloadDependencies() {
         }
     }
 }
+
+mainClassName = "org.elder.dummy.Application"
