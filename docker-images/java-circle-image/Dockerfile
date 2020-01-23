@@ -1,11 +1,11 @@
-FROM ubuntu:16.04
+FROM adoptopenjdk:11.0.5_10-jdk-openj9-0.17.0
 
 ###################################################################
 #         Basic sane Ubuntu configuration for development         #
 ###################################################################
 RUN \
   apt-get update && \
-  apt-get install -y software-properties-common python-software-properties git docker.io && \
+  apt-get install -y software-properties-common git docker.io && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
@@ -30,25 +30,13 @@ RUN \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
-
-###################################################################
-#                 Install Oracle JDK for Java 8                   #
-###################################################################
-RUN \
-  add-apt-repository -y ppa:openjdk-r/ppa && \
-  apt-get update && \
-  DEBIAN_FRONTEND=noninteractive apt-get install -y openjdk-8-jdk && \
-  apt-get clean && \
-  rm -rf /var/lib/apt/lists/*
-ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
-
 ###################################################################
 #           Install GCloud SDK and Kubernetes client              #
 ###################################################################
 # Find the latest version here: https://cloud.google.com/sdk/docs/downloads-versioned-archives
 RUN \
   cd $HOME && \
-  curl -o google-cloud-sdk.tar.gz "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-274.0.0-linux-x86_64.tar.gz" && \
+  curl -o google-cloud-sdk.tar.gz "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-277.0.0-linux-x86_64.tar.gz" && \
   tar xf google-cloud-sdk.tar.gz && \
   rm google-cloud-sdk.tar.gz && \
   ./google-cloud-sdk/install.sh && \
@@ -58,12 +46,12 @@ RUN \
 # Force downloading Gradle binaries and common Elder dependencies #
 ###################################################################
 RUN \
-  echo "Getting dependencies as of 2019-12-18" && \
+  echo "Getting dependencies as of 2020-01-23" && \
   cd $HOME && \
   mkdir .gradle && echo "org.gradle.daemon=false" > .gradle/gradle.properties && \
   git clone https://github.com/Elder-HQ/build-tools.git && \
   cd build-tools/java-dependencies && \
-  ./gradlew downloadDependencies && \
+  ./gradlew compileJava && \
   cd $HOME && \
   rm -rf build-tools
 
