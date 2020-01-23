@@ -1,16 +1,22 @@
 buildscript {
     repositories {
-        jcenter()
+        maven {
+            credentials {
+                username "$elderNexusUsername"
+                password "$elderNexusPassword"
+            }
+            url 'https://nexus.elder.org/content/repositories/central'
+        }
     }
 
     dependencies {
-        classpath 'com.bmuschko:gradle-docker-plugin:3.2.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath 'com.bmuschko:gradle-docker-plugin:6.1.2'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.50'
     }
 }
 
 plugins {
-    id "org.sonarqube" version "2.6.2"
+    id "org.sonarqube" version "2.6.1"
 }
 
 apply plugin: 'java'
@@ -56,11 +62,11 @@ configurations.all {
         force "io.github.openfeign:feign-slf4j:$feignVersion"
         force "io.netty:netty-common:$nettyVersion"
         force "io.netty:netty-codec:$nettyVersion"
+        force "io.netty:netty-codec-http:$nettyVersion"
         force "io.netty:netty-buffer:$nettyVersion"
         force "io.netty:netty-handler:$nettyVersion"
         force "io.netty:netty-transport:$nettyVersion"
         force "io.prometheus:simpleclient_servlet:0.0.20"
-        force "io.swagger:swagger-annotations:$swaggerVersion"
         force "joda-time:joda-time:2.9.2"
         force "junit:junit:$junitVersion"
         force "net.logstash.logback:logstash-logback-encoder:4.8"
@@ -82,24 +88,10 @@ configurations.all {
         force "org.json:json:20151123"
         force "org.slf4j:jcl-over-slf4j:$slf4jVersion"
         force "org.slf4j:slf4j-api:$slf4jVersion"
-        force "org.springframework.boot:spring-boot-actuator:$springBootVersion"
-        force "org.springframework.boot:spring-boot-autoconfigure:$springBootVersion"
-        force "org.springframework.boot:spring-boot:$springBootVersion"
-        force "org.springframework.cloud:spring-cloud-commons:$springCloudVersion"
-        force "org.springframework.cloud:spring-cloud-context:$springCloudVersion"
-        force "org.springframework.cloud:spring-cloud-netflix-core:$springCloudNetflixVersion"
-        force "org.springframework.data:spring-data-commons:$springDataVersion"
-        force "org.springframework.data:spring-data-jpa:$springDataJpaVersion"
-        force "org.springframework.security:spring-security-config:$springSecurityVersion"
-        force "org.springframework.security:spring-security-core:$springSecurityVersion"
-        force "org.springframework.security:spring-security-web:$springSecurityVersion"
-        force "org.springframework:spring-aop:$springVersion"
-        force "org.springframework:spring-beans:$springVersion"
-        force "org.springframework:spring-context:$springVersion"
-        force "org.springframework:spring-core:$springVersion"
-        force "org.springframework:spring-expression:$springVersion"
-        force "org.springframework:spring-web:$springVersion"
-        force "org.springframework:spring-webmvc:$springVersion"
+
+        // Legacy Kotlin dependencies, no longer needed or supported
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jre8'
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jre7'
     }
 }
 
@@ -141,21 +133,7 @@ dependencies {
     compile "commons-codec:commons-codec:1.8"
     compile "commons-collections:commons-collections:3.2.2"
     compile "commons-logging:commons-logging:1.2"
-    compile "io.github.openfeign:feign-core:$feignVersion"
-    compile "io.github.openfeign:feign-core:$feignVersion"
-    compile "io.github.openfeign:feign-httpclient:$feignVersion"
-    compile "io.github.openfeign:feign-jackson:$feignVersion"
-    compile "io.github.openfeign:feign-slf4j:$feignVersion"
-    compile "io.github.openfeign:feign-slf4j:$feignVersion"
-    compile "io.prometheus:simpleclient_servlet:0.0.20"
-    compile "io.springfox:springfox-bean-validators:$springfoxVersion"
-    compile "io.springfox:springfox-schema:$springfoxVersion"
-    compile "io.springfox:springfox-spring-web:$springfoxVersion"
-    compile "io.springfox:springfox-swagger-ui:$springfoxVersion"
-    compile "io.springfox:springfox-swagger2:$springfoxVersion"
-    compile "io.swagger:swagger-annotations:$swaggerVersion"
-    compile "io.swagger:swagger-annotations:$swaggerVersion"
-    compile "io.undertow:undertow-servlet:$undertowVersion"
+    compile "io.prometheus:simpleclient_servlet:0.3.0"
     compile "javax.el:javax.el-api:2.2.5"
     compile "joda-time:joda-time:2.9.2"
     compile "junit:junit:$junitVersion"
@@ -186,28 +164,6 @@ dependencies {
     compile "org.powermock:powermock-mockito-release-full:$powermockVersion"
     compile "org.slf4j:jcl-over-slf4j:$slf4jVersion"
     compile "org.slf4j:slf4j-api:$slf4jVersion"
-    compile "org.springframework.boot:spring-boot-actuator:$springBootVersion"
-    compile "org.springframework.boot:spring-boot-autoconfigure:$springBootVersion"
-    compile "org.springframework.boot:spring-boot-test:1.4.1.RELEASE"
-    compile "org.springframework.boot:spring-boot:$springBootVersion"
-    compile "org.springframework.cloud:spring-cloud-commons:$springCloudVersion"
-    compile "org.springframework.cloud:spring-cloud-commons:$springCloudVersion"
-    compile "org.springframework.cloud:spring-cloud-context:$springCloudVersion"
-    compile "org.springframework.cloud:spring-cloud-context:$springCloudVersion"
-    compile "org.springframework.cloud:spring-cloud-netflix-core:$springCloudNetflixVersion"
-    compile "org.springframework.cloud:spring-cloud-netflix-core:$springCloudNetflixVersion"
-    compile "org.springframework.data:spring-data-commons:$springDataVersion"
-    compile "org.springframework.data:spring-data-jpa:$springDataJpaVersion"
-    compile "org.springframework.security:spring-security-config:$springSecurityVersion"
-    compile "org.springframework.security:spring-security-core:$springSecurityVersion"
-    compile "org.springframework.security:spring-security-web:$springSecurityVersion"
-    compile "org.springframework:spring-aop:$springVersion"
-    compile "org.springframework:spring-beans:$springVersion"
-    compile "org.springframework:spring-context:$springVersion"
-    compile "org.springframework:spring-core:$springVersion"
-    compile "org.springframework:spring-expression:$springVersion"
-    compile "org.springframework:spring-web:$springVersion"
-    compile "org.springframework:spring-webmvc:$springVersion"
     compile 'ch.qos.logback:logback-classic:1.2.1'
     compile 'net.logstash.logback:logstash-logback-encoder:4.8'
     compile 'org.codehaus.janino:janino:2.7.8'
@@ -218,7 +174,7 @@ dependencies {
 
 task downloadDependencies() {
     doLast {
-        configurations.each {
+        configurations.findAll { it.canBeResolved }.each {
             def config = it
             copy {
                 from config
