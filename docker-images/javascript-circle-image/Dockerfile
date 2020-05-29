@@ -1,9 +1,22 @@
 FROM node:10
 
 ###################################################################
+#             Download Netlify command line client                #
 #            Install global build and deployment  tools           #
 ###################################################################
 ENV PATH /root/opt:$PATH
+
+RUN \
+  apt-get update && \
+  apt-get install -y curl && \
+  cd /root && \
+  mkdir opt && \
+  cd opt && \
+  curl -sL https://github.com/netlify/netlifyctl/releases/download/v0.3.2/netlifyctl-linux-amd64-0.3.2.tar.gz | tar -xzv && \
+  apt-get remove -y --purge curl && \
+  apt-get autoremove && \
+  apt-get clean && \
+  rm -rf /var/lib/apt/lists/*
 
 RUN \
   echo "Installing Global Build Tools" && \
