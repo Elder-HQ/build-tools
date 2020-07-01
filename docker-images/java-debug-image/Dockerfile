@@ -25,6 +25,10 @@ RUN make
 
 RUN cp -R bin out /perf-map-agent
 
+# Download yourkit agent
+RUN wget https://www.yourkit.com/download/YourKit-JavaProfiler-2019.8-b141.zip -P /tmp/
+RUN unzip /tmp/YourKit-JavaProfiler-2019.8-b141.zip -d /
+
 ###################################################################
 #                    Build final docker image                     #
 ###################################################################
@@ -47,6 +51,12 @@ COPY --from=build-stage /perf-map-agent /tools/perf-map-agent/
 RUN apk --no-cache add openjdk8=8.242.08-r2 perf sudo
 # RUN apk --no-cache add linux-tools-generic
 #  apt-get install -y linux-perf
+
+# Install yourkit java libraries
+COPY --from=build-stage /YourKit-JavaProfiler-2019.8/bin/linux-x86-64 /tools/yourkit-2019.8/
+
+# Install libraries required by yourkit
+RUN apk --no-cache add libc6-compat
 
 # Install useful tools like curl and jq
 RUN apk --no-cache add curl jq

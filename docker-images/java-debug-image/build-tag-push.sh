@@ -15,7 +15,7 @@ EOF
   exit 1
 fi
 
-TAG="elderhq/java-debug-8u121b13:$VERSION"
+TAG="elderhq/java-debug-8.242.08-r2:$VERSION"
 
 echo "Building $TAG..."
 
