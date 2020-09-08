@@ -1,4 +1,4 @@
-FROM adoptopenjdk:11.0.5_10-jdk-openj9-0.17.0
+FROM adoptopenjdk:8u262-b10-jdk-openj9-0.21.0
 
 ###################################################################
 #         Basic sane Ubuntu configuration for development         #
