@@ -4,18 +4,18 @@ VERSION="$1"
 
 if [ -z "$VERSION" ]; then
   cat >&2 <<EOF
-Build, tag and push a new bi-python-image docker image.
+Build, tag and push a new java debug image.
 
 SYNTAX:
   $0 <version>
 
 Example:
-  $0 "20200415-1"
+  $0 "20200630-1"
 EOF
   exit 1
 fi
 
-TAG="elderhq/bi-python-image:$VERSION"
+TAG="elderhq/java-debug-8.242.08-r2:$VERSION"
 
 echo "Building $TAG..."
 

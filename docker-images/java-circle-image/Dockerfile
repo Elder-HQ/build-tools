@@ -24,7 +24,7 @@ RUN \
 RUN \
   apt-get update && \
   (curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash) && \
-  apt-get install -y git-lfs && \
+  apt-get install -y git-lfs=2.10.0 && \
   git lfs install && \
   apt-get autoremove && \
   apt-get clean && \
