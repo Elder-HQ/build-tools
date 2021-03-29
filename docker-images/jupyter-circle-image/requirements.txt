@@ -1,0 +1,13 @@
+# TODO: Add some versions on these
+jupyter
+pandas
+numpy
+matplotlib
+seaborn
+scikit-learn
+scikit-plot
+ipykernel
+imblearn
+shap
+requests
+catboost
